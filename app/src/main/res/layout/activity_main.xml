@@ -23,24 +23,28 @@
             android:layout_weight="1"
             android:text="CE"
             android:textSize="40sp"/>
+
         <Button
+            android:id="@+id/btnClear"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="C"
-            android:textSize="40sp"/>
+            android:textSize="40sp" />
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="BS"
             android:textSize="40sp"/>
+
         <Button
+            android:id="@+id/btnDivide"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="/"
-            android:textSize="40sp"/>
+            android:textSize="40sp" />
     </LinearLayout>
 
     <LinearLayout
