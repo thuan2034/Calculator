@@ -9,11 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var textResult: TextView
-    var currentOperator: String? = null
-    var operand1: Double = 0.0
-    var operand2: Double = 0.0
-    var isOperatorPressed: Boolean = false
-    var isError: Boolean = false
+    private var currentOperator: String? = null
+    private var operand1: Double = 0.0
+    private var isOperatorPressed: Boolean = false
+    private var isError: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,48 +97,54 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun onOperatorPressed(operator: String) {
-        if (!isError) {
+        if (isError) return
+
+        if (currentOperator != null) {
+            // If an operator is already set, perform the calculation first
+            val currentValue = textResult.text.toString().toDouble()
+            operand1 = calculate(operand1, currentValue, currentOperator!!)
+            textResult.text = operand1.toString()
+        } else {
+            // If no operator has been set, set the first operand
             operand1 = textResult.text.toString().toDouble()
-            currentOperator = operator
-            isOperatorPressed = true
         }
+
+        currentOperator = operator
+        isOperatorPressed = true // Set operator pressed flag
     }
 
     private fun onEqualPressed() {
-        if (!isError && currentOperator != null) {
-            operand2 = textResult.text.toString().toDouble()
+        if (isError) return
 
-            val result = when (currentOperator) {
-                "+" -> operand1 + operand2
-                "-" -> operand1 - operand2
-                "*" -> operand1 * operand2
-                "/" -> if (operand2 != 0.0) {
-                    operand1 / operand2
-                } else {
-                    textResult.text = "Error"
-                    isError = true
-                    return
-                }
-                else -> 0.0
+        val currentValue = textResult.text.toString().toDouble()
+        if (currentOperator != null) {
+            operand1 = calculate(operand1, currentValue, currentOperator!!)
+            textResult.text = operand1.toString()
+            currentOperator = null // Reset after calculation
+        }
+    }
+
+    private fun calculate(operand1: Double, operand2: Double, operator: String): Double {
+        return when (operator) {
+            "+" -> operand1 + operand2
+            "-" -> operand1 - operand2
+            "*" -> operand1 * operand2
+            "/" -> if (operand2 != 0.0) {
+                operand1 / operand2
+            } else {
+                textResult.text = "Error"
+                isError = true
+                return 0.0
             }
-            textResult.text = result.toString()
-            resetAfterCalculation()
+            else -> operand1
         }
     }
 
     private fun clearAll() {
         textResult.text = "0"
         operand1 = 0.0
-        operand2 = 0.0
         currentOperator = null
         isOperatorPressed = false
         isError = false
-    }
-
-    private fun resetAfterCalculation() {
-        operand1 = textResult.text.toString().toDouble()
-        operand2 = 0.0
-        currentOperator = null
-        isOperatorPressed = false
     }
 }
